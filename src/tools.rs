@@ -85,7 +85,8 @@ pub fn specs() -> Vec<ToolSpec> {
         ),
         spec(
             "edit_file",
-            "Replace one exact piece of text in a file. `old` must appear exactly once. \
+            "Replace one exact piece of text in a file. Make `old` the smallest snippet that is unique in \
+              the file, usually one to three lines. Never send the whole file. \
               To create a new file, use an empty `old` and a path that does not exist.",
             json!({ "path": s("Path relative to the project folder"), "old": s("The exact text to replace"),
                      "new": s("The text to put in its place") }),

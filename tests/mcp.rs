@@ -44,7 +44,12 @@ fn modern_requests() {
     assert_eq!(r[0]["result"]["supportedVersions"][0], "2026-07-28");
     assert_eq!(r[0]["result"]["resultType"], "complete");
     assert_eq!(r[1]["result"]["tools"].as_array().unwrap().len(), 4);
-    assert!(r[2]["result"]["content"][0]["text"].as_str().unwrap().contains("name = \"kaam\""));
+    assert!(
+        r[2]["result"]["content"][0]["text"]
+            .as_str()
+            .unwrap()
+            .contains("name = \"kaam\"")
+    );
     assert_eq!(r[2]["result"]["isError"], false);
     // Bad arguments: a tool error, which the model can read and fix.
     assert_eq!(r[3]["result"]["isError"], true);

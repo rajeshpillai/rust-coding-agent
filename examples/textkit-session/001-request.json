@@ -59,7 +59,7 @@
     },
     {
       "function": {
-        "description": "Replace one exact piece of text in a file. `old` must appear exactly once. To create a new file, use an empty `old` and a path that does not exist.",
+        "description": "Replace one exact piece of text in a file. Make `old` the smallest snippet that is unique in the file, usually one to three lines. Never send the whole file. To create a new file, use an empty `old` and a path that does not exist.",
         "name": "edit_file",
         "parameters": {
           "additionalProperties": false,

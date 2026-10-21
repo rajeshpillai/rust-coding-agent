@@ -17,7 +17,7 @@
             "arguments": "{\"dir\": \".\"}",
             "name": "list_files"
           },
-          "id": "call_1eY603sSw40qcJBcIWh6vYqq",
+          "id": "call_cDNXgVu0j3KQWiHwTMF9foWC",
           "type": "function"
         },
         {
@@ -25,7 +25,7 @@
             "arguments": "{\"command\": \"cargo test -q\"}",
             "name": "run_command"
           },
-          "id": "call_halZCfyqF0AKIl8UCPpx5IJz",
+          "id": "call_ttWUtfx3fnERsyHtFYzetPPb",
           "type": "function"
         }
       ]
@@ -33,12 +33,12 @@
     {
       "content": ".gitignore\nCargo.lock\nCargo.toml\nsrc/lib.rs",
       "role": "tool",
-      "tool_call_id": "call_1eY603sSw40qcJBcIWh6vYqq"
+      "tool_call_id": "call_cDNXgVu0j3KQWiHwTMF9foWC"
     },
     {
-      "content": "\nrunning 3 tests\n. 1/3\ntests::accented_text_is_cut_by_characters --- FAILED\n.\nfailures:\n\n---- tests::accented_text_is_cut_by_characters stdout ----\n\nthread 'tests::accented_text_is_cut_by_characters' (3162020) panicked at src/lib.rs:6:22:\nend byte index 2 is not a char boundary; it is inside 'é' (bytes 1..3) of `héllo wörld`\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    tests::accented_text_is_cut_by_characters\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\nerror: test failed, to rerun pass `--lib`\n\n[exit code 101]",
+      "content": "\nrunning 3 tests\n. 1/3\ntests::accented_text_is_cut_by_characters --- FAILED\n.\nfailures:\n\n---- tests::accented_text_is_cut_by_characters stdout ----\n\nthread 'tests::accented_text_is_cut_by_characters' (3214051) panicked at src/lib.rs:6:22:\nend byte index 2 is not a char boundary; it is inside 'é' (bytes 1..3) of `héllo wörld`\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    tests::accented_text_is_cut_by_characters\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\nerror: test failed, to rerun pass `--lib`\n\n[exit code 101]",
       "role": "tool",
-      "tool_call_id": "call_halZCfyqF0AKIl8UCPpx5IJz"
+      "tool_call_id": "call_ttWUtfx3fnERsyHtFYzetPPb"
     }
   ],
   "model": "gpt-5.4-mini-2026-03-17",
@@ -91,7 +91,7 @@
     },
     {
       "function": {
-        "description": "Replace one exact piece of text in a file. `old` must appear exactly once. To create a new file, use an empty `old` and a path that does not exist.",
+        "description": "Replace one exact piece of text in a file. Make `old` the smallest snippet that is unique in the file, usually one to three lines. Never send the whole file. To create a new file, use an empty `old` and a path that does not exist.",
         "name": "edit_file",
         "parameters": {
           "additionalProperties": false,
