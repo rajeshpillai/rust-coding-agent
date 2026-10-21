@@ -10,7 +10,6 @@ pub const SIGINT: c_int = 2; // asm-generic/signal.h
 pub const SIGKILL: c_int = 9;
 
 unsafe extern "C" {
-    fn setpgid(pid: c_int, pgid: c_int) -> c_int; // setpgid(2)
     fn kill(pid: c_int, sig: c_int) -> c_int; // kill(2)
     fn signal(signum: c_int, handler: usize) -> usize; // signal(2)
     fn prctl(option: c_int, arg2: u64, arg3: u64, arg4: u64, arg5: u64) -> c_int; // prctl(2)
@@ -26,13 +25,6 @@ fn check(r: c_long) -> io::Result<c_long> {
     } else {
         Ok(r)
     }
-}
-
-/// Puts the calling process in a new process group whose id is its own pid.
-/// Called in the child between fork and exec, so it must not allocate.
-pub fn new_process_group() -> io::Result<()> {
-    // SAFETY: setpgid takes two integers and touches no memory of ours.
-    check(unsafe { setpgid(0, 0) } as c_long).map(drop)
 }
 
 /// Sends `sig` to every process in group `pgid`. `ESRCH` (the group is gone) is not an error.

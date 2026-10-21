@@ -70,17 +70,14 @@ pub fn run(command: &str, dir: &Path, limits: &Limits, sandbox: Option<&Sandbox>
     cmd.stdin(Stdio::null())
         .stdout(writer.try_clone()?)
         .stderr(writer);
-    let sandbox = sandbox.cloned();
-    // SAFETY: the closure runs in the child after fork. It only makes system calls and does not
-    // allocate: the sandbox's paths were built before fork.
-    unsafe {
-        cmd.pre_exec(move || {
-            sys::new_process_group()?;
-            if let Some(s) = &sandbox {
-                s.apply()?;
-            }
-            Ok(())
-        });
+    // its own process group, so a timeout or Ctrl+C can kill everything it starts
+    cmd.process_group(0);
+    if let Some(s) = sandbox.cloned() {
+        // SAFETY: the closure runs in the child after fork. It only makes system calls and does not
+        // allocate: the sandbox's paths were built before fork.
+        unsafe {
+            cmd.pre_exec(move || s.apply());
+        }
     }
     let mut child = cmd.spawn()?;
     // `cmd` holds the pipe's write ends. Drop it, or the reader never sees the end of the output.
