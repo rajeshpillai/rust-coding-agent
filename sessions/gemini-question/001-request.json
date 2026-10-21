@@ -1,0 +1,113 @@
+{
+  "messages": [
+    {
+      "content": "You are kaam, a coding agent working in a project folder. Use the tools to look at files, change them, and run commands. Make the smallest change that does the task, and check it by running the project's tests. When the task is done, reply with a short summary and no tool call.",
+      "role": "system"
+    },
+    {
+      "content": "How many tests does this crate have? Answer with one number.",
+      "role": "user"
+    }
+  ],
+  "model": "gemini-3.8-flash",
+  "stream": true,
+  "stream_options": {
+    "include_usage": true
+  },
+  "tools": [
+    {
+      "function": {
+        "description": "Run a shell command in the project folder. Returns its output and exit code.",
+        "name": "run_command",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "command": {
+              "description": "The command, run with sh -c",
+              "type": "string"
+            }
+          },
+          "required": [
+            "command"
+          ],
+          "type": "object"
+        },
+        "strict": false
+      },
+      "type": "function"
+    },
+    {
+      "function": {
+        "description": "Read a text file in the project.",
+        "name": "read_file",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "description": "Path relative to the project folder",
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "type": "object"
+        },
+        "strict": false
+      },
+      "type": "function"
+    },
+    {
+      "function": {
+        "description": "Replace one exact piece of text in a file. Make `old` the smallest snippet that is unique in the file, usually one to three lines. Never send the whole file. To create a new file, use an empty `old` and a path that does not exist.",
+        "name": "edit_file",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "new": {
+              "description": "The text to put in its place",
+              "type": "string"
+            },
+            "old": {
+              "description": "The exact text to replace",
+              "type": "string"
+            },
+            "path": {
+              "description": "Path relative to the project folder",
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "old",
+            "new"
+          ],
+          "type": "object"
+        },
+        "strict": false
+      },
+      "type": "function"
+    },
+    {
+      "function": {
+        "description": "List the files below a folder of the project.",
+        "name": "list_files",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "dir": {
+              "description": "Folder relative to the project, or .",
+              "type": "string"
+            }
+          },
+          "required": [
+            "dir"
+          ],
+          "type": "object"
+        },
+        "strict": false
+      },
+      "type": "function"
+    }
+  ]
+}

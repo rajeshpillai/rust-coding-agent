@@ -66,6 +66,51 @@ kaam --provider ollama --model qwen3:1.7b "..."       # a local Ollama on localh
 
 `kaam --help` lists every option.
 
+## Every stage of the course
+
+Each lesson ends at a checkpoint. If you fall behind, or your code will not compile, copy that
+stage and continue from it. Every folder in `stages/` is a complete crate. Each one compiles
+and passes `cargo fmt --check`, and the last one is the crate at the top of this repo.
+
+| Lesson | Checkpoint |
+|---|---|
+| 1. Talk to the model | `stages/01c/` |
+| 2. Messages are data | `stages/02c/` |
+| 3. Stream it | `stages/03c/` |
+| 4. The first tool | `stages/04b/` |
+| 5. The loop | `stages/05d/` |
+| 6. One trait, four models | `stages/06b/` |
+| 7. Run a command safely | `stages/07d/` |
+| 8. Ctrl+C | `stages/08a/` |
+| 9. Edit, do not rewrite | `stages/09a/` |
+| 10. Ask first, then a real sandbox | `stages/10c/` |
+| 11. Tools over MCP | `stages/11b/` |
+| 12. The context budget | `stages/12a/` |
+
+The folders between checkpoints (`01a`, `01b`, …) are the steps inside a lesson, in the order
+the video types them. Some of them fail on purpose: `01b` hangs, as lesson 1 shows.
+
+```sh
+cp -r stages/05d my-agent && cd my-agent
+cargo run -- --root ../examples/textkit "cargo test fails in this crate. Fix it."
+```
+
+That run calls OpenAI, so it needs `OPENAI_API_KEY`, like the finished agent.
+
+### Recorded sessions
+
+`sessions/` holds the model sessions the course shows: each request the agent sent and each
+reply, numbered by turn. They contain no headers and no keys. `examples/textkit-session` is the
+cold-open session, which `--replay` plays back without a key.
+
+| Folder | What it is |
+|---|---|
+| `sessions/cold-open/` | the opening task, fixed in 5 turns (OpenAI) |
+| `sessions/cold-open-over-mcp/` | the same task with the tools behind the MCP server |
+| `sessions/long-run-17-turns/` | a run that took 17 turns, used in lesson 12 |
+| `sessions/stage-05d/` | the first full agent run, at stage 05d |
+| `sessions/gemini-question/` | Gemini, with the thought signature that lesson 6 is about |
+
 ## What was tested, and what was not
 
 - Tested on Linux 7.0 (Landlock ABI 8) with rustc 1.95.0: the unit and integration tests, live runs

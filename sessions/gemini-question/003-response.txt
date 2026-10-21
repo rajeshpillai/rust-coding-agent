@@ -1,0 +1,6 @@
+data: {"choices":[{"delta":{"role":"assistant","tool_calls":[{"extra_content":{"google":{"thought_signature":"Er8BCrwBAWkUfROoS4YGglr3BHuzp5Ztb+gH35BvYTpdE35OpdvThbuD5xnjAG5zBLsGpna3qsRSfx8Cc9IoC86f/aedYejkAiYBXkVqBlxbbZ+L0KJ6KiAcmH4Eec8xRj/aIsKI1tEGu0DPAh2zKJEqlYdfDpEoVRbkxvL0VCKULTw6cuxkE/YajUMCKVQABRW4txOm4WuLaqF9FqYFmbEAOv+9zxP3WL2z484yoxHw8w2wnom8484qLA5XCJq9yXo="}},"function":{"arguments":"{\"dir\":\".\"}","name":"list_files"},"id":"call_718790","type":"function"}]},"index":0}],"created":1792567301,"id":"A2jYasr1K-3n4-EPwZmqiAQ","model":"gemini-3.8-flash","object":"chat.completion.chunk","usage":{"completion_tokens":16,"prompt_tokens":903,"total_tokens":935}}
+
+data: {"choices":[{"delta":{"role":"assistant"},"finish_reason":"stop","index":0}],"created":1792567301,"id":"A2jYasr1K-3n4-EPwZmqiAQ","model":"gemini-3.8-flash","object":"chat.completion.chunk","usage":{"completion_tokens":16,"prompt_tokens":953,"total_tokens":985}}
+
+data: [DONE]
+

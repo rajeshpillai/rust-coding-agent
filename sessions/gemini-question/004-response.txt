@@ -1,0 +1,6 @@
+data: {"choices":[{"delta":{"content":"3","role":"assistant"},"index":0}],"created":1792567304,"id":"BmjYaujYAfatjuMPiPi_8AM","model":"gemini-3.8-flash","object":"chat.completion.chunk","usage":{"completion_tokens":1,"prompt_tokens":948,"total_tokens":985}}
+
+data: {"choices":[{"delta":{"extra_content":{"google":{"thought_signature":"EpQCCpECAWkUfRPQtblQgVErY+ZXsQteLdIspwoq1IJ0h61gIlWQeXoUYQQM8t/KjGysbB3W2rcTU7BRQYJ4LXEkFCC6tlRlAvrQiielVoqOjuq2waDC3o+uRRW05hM9gB0TA1r8OVNNpsAusMNMX4xXDLW8iIcYM1kdPSoX7Fzld9LzBKxDqYqFomtfLIueCN9zH2KrS27fmDQ4+9Ix4DliHwzVOgP74iM2AygH0kOmeN8uWnBZXgRmzY9FHY1OkrA50V0l5i2pL2c6uACHJpuStV5btrcLu6/lAjvOj4dCpgpzqKCmlAauYPs/oCcmAZqGz4p7oXVwVlv+7PlhvFv49jcU7OFj+GSnrQJCY1bLXcdeLD++"}},"role":"assistant"},"finish_reason":"stop","index":0}],"created":1792567304,"id":"BmjYaujYAfatjuMPiPi_8AM","model":"gemini-3.8-flash","object":"chat.completion.chunk","usage":{"completion_tokens":1,"prompt_tokens":1014,"total_tokens":1051}}
+
+data: [DONE]
+

@@ -1,0 +1,103 @@
+//! The loop: ask the model, run the tools it asks for, send back the results, until it stops.
+
+use crate::chat::{Message, ToolCall};
+use crate::client::Client;
+use crate::signal;
+use crate::tools::Workspace;
+use std::io::{self, Write};
+
+#[derive(Debug, PartialEq)]
+pub enum Outcome {
+    Done { steps: usize },
+    StepBudget,
+    Cancelled,
+}
+
+pub struct Agent {
+    pub client: Client,
+    pub tools: Workspace,
+    pub max_steps: usize,
+    pub history: Vec<Message>,
+}
+
+pub const SYSTEM: &str = "You are kaam, a coding agent working in a project folder. \
+Use the tools to look at files, change them, and run commands. \
+Make the smallest change that does the task, and check it by running the project's tests. \
+When the task is done, reply with a short summary and no tool call.";
+
+impl Agent {
+    pub fn new(client: Client, tools: Workspace) -> Agent {
+        Agent {
+            client,
+            tools,
+            max_steps: 20,
+            history: vec![Message::System(SYSTEM.into())],
+        }
+    }
+
+    pub fn run(&mut self, task: &str) -> io::Result<Outcome> {
+        self.history.push(Message::User(task.into()));
+        let specs = crate::tools::specs();
+        for step in 1..=self.max_steps {
+            let mut out = io::stdout();
+            let reply = self.client.complete(&self.history, &specs, &mut |t| {
+                print!("{t}");
+                let _ = out.flush();
+            })?;
+            if !reply.text.is_empty() {
+                println!();
+            }
+            let u = reply.usage;
+            println!(
+                "  · tokens: {} in ({} cached), {} out",
+                u.input, u.cached, u.output
+            );
+            if signal::interrupted() {
+                signal::clear();
+                return Ok(Outcome::Cancelled);
+            }
+            let calls = reply.calls.clone();
+            self.history.push(Message::Assistant {
+                text: reply.text,
+                calls: reply.calls,
+            });
+            if calls.is_empty() {
+                return Ok(Outcome::Done { steps: step });
+            }
+            for call in &calls {
+                let (content, is_error) = self.one_call(call)?;
+                println!("  {} {}", if is_error { "✗" } else { "←" }, summary(&content));
+                self.history.push(Message::Tool {
+                    call_id: call.id.clone(),
+                    name: call.name.clone(),
+                    content,
+                });
+            }
+        }
+        Ok(Outcome::StepBudget)
+    }
+
+    fn one_call(&mut self, call: &ToolCall) -> io::Result<(String, bool)> {
+        println!("→ {} {}", call.name, short(&call.args, 96));
+        Ok(self.tools.call(call))
+    }
+}
+
+/// The first line of a result, and its last line when there is more than one.
+fn summary(content: &str) -> String {
+    let lines: Vec<&str> = content.lines().filter(|l| !l.trim().is_empty()).collect();
+    match lines.as_slice() {
+        [] => String::new(),
+        [one] => short(one, 100),
+        [first, .., last] => format!("{} … {}", short(first, 60), short(last, 60)),
+    }
+}
+
+fn short(s: &str, max: usize) -> String {
+    let one = s.replace('\n', " ");
+    if one.chars().count() <= max {
+        one
+    } else {
+        one.chars().take(max).collect::<String>() + "…"
+    }
+}
