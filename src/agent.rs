@@ -95,7 +95,7 @@ impl Agent {
     }
 
     fn one_call(&mut self, call: &ToolCall) -> io::Result<(String, bool)> {
-        println!("→ {} {}", call.name, short(&call.args, 160));
+        println!("→ {} {}", call.name, short(&call.args, 96));
         if Tool::needs_approval(&call.name) {
             let yes = match self.approver {
                 Approver::Yes => {
