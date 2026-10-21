@@ -154,22 +154,33 @@ fn main() -> ExitCode {
             }
         };
     }
-    match run(&args) {
-        Ok(code) => code,
+    let o = match parse(&args) {
+        Ok(o) if o.task.is_some() => o,
+        Ok(_) => {
+            eprintln!("kaam: no task given\n\n{USAGE}");
+            return ExitCode::from(2);
+        }
         Err(e) if e.is_empty() => {
             println!("{USAGE}");
-            ExitCode::SUCCESS
+            return ExitCode::SUCCESS;
         }
         Err(e) => {
             eprintln!("kaam: {e}\n\n{USAGE}");
-            ExitCode::from(2)
+            return ExitCode::from(2);
+        }
+    };
+    match run(o) {
+        Ok(code) => code,
+        // a failure while running (the network, the API) is not a usage mistake: no help text
+        Err(e) => {
+            eprintln!("kaam: {e}");
+            ExitCode::FAILURE
         }
     }
 }
 
-fn run(args: &[String]) -> Result<ExitCode, String> {
-    let o = parse(args)?;
-    let task = o.task.clone().ok_or("no task given")?;
+fn run(o: Options) -> Result<ExitCode, String> {
+    let task = o.task.clone().unwrap_or_default();
     let (provider, base) = provider(&o, o.replay.is_none())?;
     let transport = match &o.replay {
         Some(dir) => Client::replay_from(dir).map_err(|e| e.to_string())?,
