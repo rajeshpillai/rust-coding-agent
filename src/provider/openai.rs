@@ -32,10 +32,17 @@ impl Provider for OpenAi {
                 Message::Assistant { text, calls } => json!({
                     "role": "assistant",
                     "content": if text.is_empty() { Value::Null } else { json!(text) },
-                    "tool_calls": calls.iter().map(|c| json!({
-                        "id": c.id, "type": "function",
-                        "function": { "name": c.name, "arguments": c.args },
-                    })).collect::<Vec<_>>(),
+                    "tool_calls": calls.iter().map(|c| {
+                        let mut call = json!({
+                            "id": c.id, "type": "function",
+                            "function": { "name": c.name, "arguments": c.args },
+                        });
+                        // whatever the provider attached to the call goes back exactly as it came
+                        if let Some(x) = &c.extra {
+                            call["extra_content"] = x.clone();
+                        }
+                        call
+                    }).collect::<Vec<_>>(),
                 }),
                 Message::Tool { call_id, content, .. } => {
                     json!({ "role": "tool", "tool_call_id": call_id, "content": content })
@@ -101,11 +108,15 @@ impl Provider for OpenAi {
                         id: String::new(),
                         name: String::new(),
                         args: String::new(),
+                        extra: None,
                     });
                 }
                 let call = &mut reply.calls[i];
                 if let Some(id) = piece["id"].as_str() {
                     call.id = id.to_string();
+                }
+                if let Some(x) = piece.get("extra_content") {
+                    call.extra = Some(x.clone());
                 }
                 if let Some(n) = piece["function"]["name"].as_str() {
                     call.name.push_str(n);

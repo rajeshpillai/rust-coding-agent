@@ -23,6 +23,8 @@ pub struct ToolCall {
     pub id: String,
     pub name: String,
     pub args: String,
+    /// Provider data that must go back with the call, untouched (Gemini's thought signature).
+    pub extra: Option<Value>,
 }
 
 /// What we tell the model about one tool.

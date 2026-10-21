@@ -94,6 +94,7 @@ impl Provider for Anthropic {
                             id: b["id"].as_str().unwrap_or("").into(),
                             name: b["name"].as_str().unwrap_or("").into(),
                             args: String::new(),
+                            extra: None,
                         });
                         block_call[i] = Some(reply.calls.len() - 1);
                     }

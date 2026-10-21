@@ -69,10 +69,12 @@ kaam --provider ollama --model qwen3:1.7b "..."       # a local Ollama on localh
 ## What was tested, and what was not
 
 - Tested on Linux 7.0 (Landlock ABI 8) with rustc 1.95.0: the unit and integration tests, live runs
-  with OpenAI `gpt-5.4-mini-2026-03-17`, replay, and the MCP server with the official MCP Inspector
-  2.11.0.
-- The Anthropic and Gemini adapters follow each provider's API documentation. They have **not been run
-  yet**.
+  with OpenAI `gpt-5.4-mini-2026-03-17` and Gemini `gemini-3.8-flash`, replay, and the MCP server with
+  the official MCP Inspector 2.11.0.
+- Gemini uses the OpenAI adapter, through Google's OpenAI-compatible endpoint. Gemini attaches a thought
+  signature to each tool call (`extra_content`), and refuses the next request unless it comes back; the
+  adapter returns it untouched.
+- The Anthropic adapter follows Anthropic's API documentation. It has **not been run yet**.
 - The local model path works with Ollama's OpenAI-compatible endpoint. On a laptop CPU an agent turn
   takes minutes, so it was not used for the recordings.
 - Linux only. The sandbox is Landlock, and process control uses Linux system calls.
