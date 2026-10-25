@@ -93,7 +93,11 @@ fn run(o: Options) -> Result<ExitCode, String> {
     let task = o.task.clone().unwrap_or_default();
     let provider = OpenAi {
         model: o.model.clone().unwrap_or("gpt-5.4-mini-2026-03-17".into()),
-        key: Some(key("OPENAI_API_KEY")?),
+        key: if o.replay.is_none() {
+            Some(key("OPENAI_API_KEY")?)
+        } else {
+            None
+        },
         path: "/v1/chat/completions".into(),
         strict: true,
     };
