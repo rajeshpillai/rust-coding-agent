@@ -36,7 +36,7 @@ pub fn specs() -> Vec<ToolSpec> {
     let s = |d: &str| json!({ "type": "string", "description": d });
     vec![spec(
         "run_command",
-        "Run a shell command in the project folder. Returns its output and exit code.",
+        "Run a shell command in the project folder. Returns its output.",
         json!({ "command": s("The command, run with sh -c") }),
         &["command"],
     )]
